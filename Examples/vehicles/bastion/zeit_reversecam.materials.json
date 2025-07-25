@@ -1,0 +1,54 @@
+{
+  "bastion_zeit_reversecam": {
+    "name": "bastion_zeit_reversecam",
+    "mapTo": "bastion_zeit_reversecam",
+    "class": "Material",
+    "Stages": [
+      {
+        "baseColorFactor": [
+          0.0901959985,
+          0.0901959985,
+          0.0901959985,
+          1
+        ],
+        "emissive": true,
+        "emissiveFactor": [
+          1,
+          1,
+          1
+        ],
+        "emissiveMap": "@zeit_reversecam_tex",
+        "metallicFactor": 0.519999981,
+        "roughnessFactor": 0.109999999
+      },
+      {
+        "baseColorFactor": null,
+        "emissive": null,
+        "emissiveFactor": null,
+        "metallicFactor": null,
+        "roughnessFactor": null
+      },
+      {
+        "baseColorFactor": null,
+        "emissive": null,
+        "emissiveFactor": null,
+        "metallicFactor": null,
+        "roughnessFactor": null
+      },
+      {
+        "baseColorFactor": null,
+        "emissive": null,
+        "emissiveFactor": null,
+        "metallicFactor": null,
+        "roughnessFactor": null
+      }
+    ],
+    "alphaRef": 0,
+    "castShadows": false,
+    "dynamicCubemap": true,
+    "materialTag0": "beamng",
+    "materialTag1": "vehicle",
+    "translucentBlendOp": "None",
+    "version": 1.5
+  },
+}

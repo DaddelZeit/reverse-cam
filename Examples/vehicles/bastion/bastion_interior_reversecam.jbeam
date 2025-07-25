@@ -1,0 +1,204 @@
+{
+"bastion_dash_reversecam": {
+    "information":{
+        "authors":"BeamNG, DaddelZeit",
+        "name":"Interior (Reverse Camera)",
+        "value":400,
+    },
+    "slotType" : "bastion_dash",
+    "slots":[
+        ["type", "default", "description"],
+        ["bastion_shifter","bastion_shifter_A", "Shifter", {"coreSlot":true}],
+        ["bastion_gauges","bastion_gauges_luxe", "Gauge", {"coreSlot":true}],
+        ["bastion_console","bastion_console", "Center Console", {"coreSlot":true}],
+        ["bastion_dash_accessory","", "Dashboard Accessory"],
+        ["bastion_partition","", "Rear Partition"],
+        ["bastion_shiftlight","", "Shift Light"],
+        ["soundscape_horn", "soundscape_horn_6", "Horn"],
+    ],
+    "flexbodies": [
+        ["mesh", "[group]:", "nonFlexMaterials"],
+        ["bastion_dash", ["bastion_dash"]],
+        ["bastion_center_mirror", ["bastion_body"]],
+        ["bastion_center_mirrorglass", ["bastion_body"]],
+        ["bastion_roof_console", ["bastion_body"]],
+        ["bastion_sunvisors", ["bastion_body"]],
+        {"deformGroup":"display_break", "deformMaterialBase":"bastion_gps_screen", "deformMaterialDamaged":"bastion_gauges_break"},
+        ["bastion_gps_screen", ["bastion_dash"]],
+        ["bastion_gauges_screen", ["bastion_dash"]],
+        {"deformGroup":"display_break", "deformMaterialBase":"bastion_reversecam", "deformMaterialDamaged":"invis"},
+        ["bastion_gps_screen", ["bastion_dash"], [],{"materialOverride":[
+            ["bastion_gps_screen","bastion_reversecam"],
+        ], "pos":{"x": 0.0, "y":0.0005, "z":0.0}}],
+        {"deformGroup":""},
+    ],
+    "mirrors": [
+        ["mesh", "idRef:", "id1:", "id2:"],
+        ["bastion_center_mirrorglass","rf1","rf1r","rf2",{"refBaseTranslation":{"x":0.01,"y":-0.08,"z":-0.135},"baseRotationGlobal":{"x":3.9,"y":0.0,"z":8.8}}],
+    ],
+    "glowMap":{
+        "bastion_gauges_screen":{"simpleFunction":{"ignitionLevel":0.5}, "off":"screen_off", "on":"bastion_gauges_screen_accessory", "on_intense":"bastion_gauges_screen"},
+        "bastion_reversecam":{"simpleFunction":{"ignitionLevel":0.1, "reverseCam":0.4}, "off":"invis", "on":"invis", "on_intense":"bastion_zeit_reversecam"},
+    },
+
+    "controller": [
+        ["fileName"],
+        ["beamNavigator", {"screenMaterialName": "@bastion_gps_screen", "htmlFilePath": "local://local/vehicles/common/navi_screen.html", "name":"bastion_navi"}],
+        ["reverseCam", {
+            "texTargetName":"@zeit_reversecam_tex",
+            "camNode":"rb2",
+
+            "res": [512, 256],
+            "clip": [0.1, 150],
+            "fov": 90,
+
+            "rotOffset":{"x":0, "y":0, "z":-0.175},
+            "posOffset":{"x":0, "y":-0.05, "z":-0.05},
+        }],
+        ["gauges/genericGauges", {"name":"gauge", }],
+        ["gauges/customModules/environmentData"],
+        ["gauges/customModules/combustionEngineData"],
+        ["gauges/customModules/accelerationData"],
+    ],
+    "gauge": {
+        "configuration": {
+            "materialName": "@bastion_gauges_screen"
+            "htmlPath": "local://local/vehicles/bastion/gauges_screen/gauge_standard.html"
+            "displayWidth":512
+            "displayHeight":512
+        }
+        "displayData": {
+            "electrics": [
+                "gear",
+                "fuel",
+                "watertemp",
+                "wheelspeed",
+                "linelock",
+                "transbrake",
+                "odometer",
+                "trip"
+            ]
+            "customModules": [
+                ["moduleName", "property"]
+                ["environmentData", "time"],
+                ["accelerationData", "accelerationSmooth"]
+                ["combustionEngineData", "currentPower"]
+            ]
+        },
+    },
+    "props": [
+        ["func",       "mesh",               "idRef:", "idX:", "idY:",  "baseRotation",            "rotation",               "translation",          "min", "max", "offset", "multiplier"],
+        //steering column controls
+        ["turnsignal", "bastion_turn_signal_stalk", "dshl","dsh","int_strw", {"x": 90, "y":0, "z":180}, {"x":0, "y":-10, "z":0},  {"x":0, "y":0, "z":0},  -1, 1, -0.0, 1],
+        //pedals
+        ["throttle",   "bastion_pedal_gas",   "f1l","f1r","f6l",         {"x":0, "y":0, "z":180},   {"x":-25, "y":0, "z":0},  {"x":0.0, "y":0, "z":0}, 0, 1, 0,    1],
+    ],
+    "soundscape": [
+        ["name", "src"],
+        //indicator6,
+        {"node:":"int_strw"},
+        ["indicatorStart", "event:>Vehicle>Interior>Indicator>SUB_On"],
+        ["indicatorStop", "event:>Vehicle>Interior>Indicator>SUB_Off"],
+        ["indLoop1", "event:>Vehicle>Interior>Indicator>POL_Click"],
+        ["indLoop2", "event:>Vehicle>Interior>Indicator>POL_Clack"],
+        //lights11
+        ["LightOn", "event:>Vehicle>Interior>Light>POL_Light_On"],
+        ["LightOff", "event:>Vehicle>Interior>Light>POL_Light_Off"],
+        //handbrake2
+        {"node:":"int_pbrk"},
+        ["handbrakeDisengaged","event:>Vehicle>Interior>Handbrake_Electric>Electric_01_Unlock"],
+        ["handbrakeEngaging","event:>Vehicle>Interior>Handbrake_Electric>Electric_01_Lock"],
+        //affects horn location because horn soundscape is loaded after
+        {"node:":"f15"},
+    ],
+    "nodes": [
+         ["id", "posX", "posY", "posZ"],
+         {"collision":true},
+         {"selfCollision":false},
+         {"frictionCoef":0.5},
+         {"nodeMaterial":"|NM_METAL"},
+         //dashboard
+         {"group":"bastion_dash"},
+         {"nodeWeight":12},
+         ["dshr", -0.393, -0.60, 0.87],
+         ["dsh",   0.00, -0.60, 0.87],
+         ["dshl",  0.393, -0.60, 0.87],
+         {"nodeWeight":1},
+         ["int_strw",  0.393, -0.53, 0.90],
+         {"group":""},
+         {"nodeWeight":0.2},
+         ["int_pbrk", 0.05, -0.23, 0.56],
+         ["int_shft", 0.05, -0.40, 0.56],
+    ],
+    "torsionbars":[
+       ["id1:", "id2:", "id3:", "id4:"],
+        //rigify the column
+        {"spring":20000, "damp":1, "deform":18000, "strength":28000},
+        ["int_strw", "dshl", "dsh", "f5l"],
+
+    ],
+    "beams":[
+          ["id1:", "id2:"],
+          {"beamPrecompression":1, "beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+
+          {"deformLimitExpansion":""},
+          {"deformGroup":"display_break","deformationTriggerRatio":0.05},
+          //dash board
+          {"beamSpring":869146.6,"beamDamp":142.73},
+          {"beamDeform":12400,"beamStrength":"FLT_MAX"},
+          {"deformLimitExpansion":""},
+          ["dshr","f5r"],
+          ["dshl","f5l"],
+          ["dshr","f6r"],
+          ["dshl","f6l"],
+          ["dshr","f1r"],
+          ["dshl","f1l"],
+          ["dshr","f5rr"],
+          ["dshl","f5ll"],
+          ["dshr","f6rr"],
+          ["dshl","f6ll"],
+          ["dshl","dshr"],
+          ["dsh","f5r"],
+          ["dsh","f5l"],
+          ["dsh","f6r"],
+          ["dsh","f6l"],
+          ["dsh","f1r"],
+          ["dsh","f1l"],
+          ["dshl","dsh"],
+          ["dshr","dsh"],
+          ["dsh","int_strw"],
+          ["dshl","int_strw"],
+          {"beamSpring":160100,"beamDamp":142.73},
+          {"beamDeform":70300,"beamStrength":"FLT_MAX"},
+          ["int_pbrk","f5l"],
+          ["int_pbrk","f5r"],
+          ["int_pbrk","f2r"],
+          ["int_pbrk","f2l"],
+          ["int_shft","f5l"],
+          ["int_shft","f5r"],
+          ["int_shft","f2r"],
+          ["int_shft","f2l"],
+          {"deformGroup":""},
+          {"beamType":"|NORMAL", "beamLongBound":1.0, "beamShortBound":1.0},
+          {"deformLimitExpansion":""},
+    ],
+    "triangles":[
+        ["id1:", "id2:", "id3:"],
+        {"groundModel":"plastic"},
+        //Dashboard
+        {"dragCoef":0},
+        ["dshl", "f6ll", "f5ll"],
+        ["f6ll", "dshl", "f6l"],
+        ["f6l", "dshl", "dsh"],
+        ["dsh", "f6r", "f6l"],
+        ["dsh", "dshr", "f6r"],
+        ["f6r", "dshr", "f6rr"],
+        ["dshr", "f5rr", "f6rr"],
+        ["dshl", "f5ll", "f5l"],
+        ["f5l", "dsh", "dshl"],
+        ["f5l", "f5r", "dsh"],
+        ["dsh", "f5r", "dshr"],
+        ["dshr", "f5r", "f5rr"],
+    ],
+},
+}
