@@ -14,6 +14,11 @@ The example folder contains a working camera for the Bruckell Bastion.
 ### Fields available for JBeam
 To actually trigger rendering, a managing Lua controller is required. The following values can be changed in JBeam:
 
+#### geExt
+The game engine Lua extension name. This is the name for the Lua file in /lua/ge, starting at /lua/ge/extensions. Additional subfolders that would usually be separated by / are substituted by an underscore.<br>
+Ensure that this file has a unique name when packaging it into your own mod.<br>
+Example for /lua/ge/extensions/zeit/carReverseCam.lua: zeit_carReverseCam
+
 #### texTargetName
 The string that the texture can be referred to by the material. Prefaced with an "@".<br>
 Example: @zeit_reversecam_tex
