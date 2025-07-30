@@ -19,12 +19,16 @@ The game engine Lua extension name. This is the name for the Lua file in /lua/ge
 Ensure that this file has a unique name when packaging it into your own mod.<br>
 Example for /lua/ge/extensions/zeit/carReverseCam.lua: zeit_carReverseCam
 
+#### debug
+Boolean value to enable/disable debug displays.
+
 #### texTargetName
 The string that the texture can be referred to by the material. Prefaced with an "@".<br>
 Example: @zeit_reversecam_tex
 
-#### camNode
-Reference node name.
+#### camNodes
+Reference node names. Needs idRef, idX and idY.<br>
+Example: {"idRef": "rb2", "idX":"rb3", "idY":"rb2r"}
 
 #### res
 An array of two numbers that define the x and y size of the texture.<br>
@@ -39,7 +43,7 @@ The field of view the camera will use.
 
 #### rotOffset
 Rotational (directional) offset as a 3 point vector.<br>
-Example: {"x":0, "y":0, "z":-0.175}
+Example: {"x":0.014, "y":0.5, "z":-0.2}
 
 #### posOffset
 Position offset as a 3 point vector.<br>

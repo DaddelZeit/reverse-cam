@@ -25,7 +25,6 @@ SOFTWARE.
 local M = {}
 
 local geExt = "zeit_carReverseCam"
-local node = 0
 local target
 local geLuaStr = ""
 local electricsName = "reverseCam"
@@ -35,14 +34,20 @@ local posOffset = vec3()
 local pos = vec3()
 local rot = quat()
 
+local debug = false
+
+local nodeIdRef, nodeIdX, nodeIdY = 0, 0, 0
+
 local res = {512, 256}
 local fov = 70
 local clip = {0.1, 100}
 
 local function onPlayersChanged()
-    obj:queueGameEngineLua([[
-        extensions.]]..geExt..[[.setFocusCar(]]..objectId..[[)
-    ]])
+    if playerInfo.anyPlayerSeated then
+        obj:queueGameEngineLua([[
+            extensions.]]..geExt..[[.setFocusCar(]]..objectId..[[)
+        ]])
+    end
 end
 
 local function updateGFX(dt)
@@ -50,11 +55,25 @@ local function updateGFX(dt)
     if electrics.values.reverse == 1 and playerInfo.anyPlayerSeated and target then
         pos:set(obj:getPositionXYZ())
         rot:set(obj:getRotation())
-        pos = pos + obj:getNodePosition(node) + posOffset:rotated(rot) + obj:getVelocity()*dt
+
+        local id1 = vec3(obj:getNodePosition(nodeIdRef))
+        local id2 = vec3(obj:getNodePosition(nodeIdX))
+        local id3 = vec3(obj:getNodePosition(nodeIdY))
+
+        local camDir = (id2 - id1):cross(id3 - id2):normalized() + directionVector:rotated(rot)
+        local camPos = id1 + posOffset:rotated(rot) + obj:getVelocity() * dt
+
+        if debug then
+            obj.debugDrawProxy:drawSphere(0.01, pos + id1, color(255,255,255,255))
+            obj.debugDrawProxy:drawSphere(0.01, pos + id2, color(255,255,255,255))
+            obj.debugDrawProxy:drawSphere(0.01, pos + id3, color(255,255,255,255))
+
+            obj.debugDrawProxy:drawLine(pos + camPos, pos + camPos + camDir, color(255,255,255,255))
+        end
 
         obj:queueGameEngineLua(string.format(geLuaStr,
-            pos,
-            quatFromDir(directionVector:rotated(rot), obj:getDirectionVectorUp()),
+            pos + camPos,
+            quatFromDir(camDir, obj:getDirectionVectorUp()),
             res[1],
             res[2],
             fov,
@@ -69,14 +88,16 @@ end
 local function init(jbeamData)
     geExt = jbeamData.geExt or geExt
     electricsName = jbeamData.electricsName or electricsName
-    node = beamstate.nodeNameMap[jbeamData.camNode or 0]
+    nodeIdRef = beamstate.nodeNameMap[jbeamData.camNodes.idRef or 0]
+    nodeIdX = beamstate.nodeNameMap[jbeamData.camNodes.idX or 0]
+    nodeIdY = beamstate.nodeNameMap[jbeamData.camNodes.idY or 0]
     target = jbeamData.texTargetName
+    debug = jbeamData.debug
 
     if jbeamData.posOffset then
         posOffset:set(jbeamData.posOffset.x, jbeamData.posOffset.y, jbeamData.posOffset.z)
     end
 
-    directionVector = vec3(0,1,0)
     if jbeamData.rotOffset then
         directionVector = (directionVector + vec3(jbeamData.rotOffset)):normalized()
     end
